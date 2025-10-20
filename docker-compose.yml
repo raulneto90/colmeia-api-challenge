@@ -1,0 +1,16 @@
+services:
+  database:
+    image: postgres:alpine
+    container_name: colmeia-postgres
+    environment:
+      POSTGRES_DB: colmeia
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
