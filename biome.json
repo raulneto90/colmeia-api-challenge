@@ -14,10 +14,15 @@
 	},
 	"linter": {
 		"enabled": true,
+		"includes": ["src/**/*.ts"],
 		"rules": {
 			"recommended": true,
 			"style": {
 				"useImportType": "off"
+			},
+			"complexity": {
+				"noStaticOnlyClass": "off",
+				"noBannedTypes": "off"
 			}
 		}
 	},
