@@ -17,7 +17,7 @@ export class PostgresCustomerRepository implements CustomersRepository {
 	async findByFilters(filters: Partial<Customer>): Promise<Customer | null> {
 		return this.prismaService.customer.findFirst({
 			where: {
-				OR: [{ email: filters.email }, { document: filters.document }],
+				OR: [{ email: filters.email }, { document: filters.document }, { id: filters.id }],
 			},
 		});
 	}

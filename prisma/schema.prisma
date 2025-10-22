@@ -23,5 +23,84 @@ model Customer {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  charges Charge[]
+
   @@map("customers")
+}
+
+model Charge {
+  id         String   @id
+  customerId String   @map("customer_id")
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("BRL")
+  paymentMethod PaymentMethod @map("payment_method")
+  status        ChargeStatus  @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  pixCharge        PixCharge?
+  creditCardCharge CreditCardCharge?
+  boletoCharge     BoletoCharge?
+
+  @@map("charges")
+}
+
+model PixCharge {
+  id       String @id @default(uuid())
+  chargeId String @unique @map("charge_id")
+  charge   Charge @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+
+  pixKey String @map("pix_key")
+  qrCode String @map("qr_code")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("pix_charges")
+}
+
+model CreditCardCharge {
+  id       String @id @default(uuid())
+  chargeId String @unique @map("charge_id")
+  charge   Charge @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+
+  installments Int
+  lastDigits   String  @map("last_digits")
+  cardBrand    String? @map("card_brand")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("credit_card_charges")
+}
+
+model BoletoCharge {
+  id       String @id @default(uuid())
+  chargeId String @unique @map("charge_id")
+  charge   Charge @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+
+  barcode String   @unique
+  dueDate DateTime @map("due_date")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("boleto_charges")
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  BOLETO
+}
+
+enum ChargeStatus {
+  PENDING
+  PAID
+  FAILED
+  EXPIRED
+  CANCELLED
 }
