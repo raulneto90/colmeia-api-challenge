@@ -1,98 +1,359 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 Colmeia API Challenge
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST para gerenciamento de clientes e cobranças com suporte a múltiplos métodos de pagamento (PIX, Cartão de Crédito e Boleto).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📋 Descrição
 
-## Description
+Sistema desenvolvido com NestJS, Prisma ORM e PostgreSQL seguindo os princípios de **Clean Architecture** e **Domain-Driven Design (DDD)**. A API permite criar clientes e gerenciar cobranças com diferentes formas de pagamento de maneira polimórfica.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ Features
 
-## Project setup
+### 👥 Gerenciamento de Clientes
+- ✅ Criação de clientes com validação de dados
+- ✅ Validação de email e documento únicos
+- ✅ Estrutura DDD com separação de camadas
+
+### 💰 Gerenciamento de Cobranças
+- ✅ Suporte a múltiplos métodos de pagamento:
+  - **PIX**: Chave PIX e QR Code
+  - **Cartão de Crédito**: Parcelamento, últimos dígitos e bandeira
+  - **Boleto**: Código de barras e data de vencimento
+- ✅ Estados de cobrança: PENDING, PAID, FAILED, EXPIRED, CANCELLED
+- ✅ Validação de cliente antes da criação
+- ✅ Design polimórfico no banco de dados
+
+## 🏗️ Arquitetura
+
+O projeto segue **Clean Architecture** com **DDD**, organizado em camadas:
+
+```
+src/
+├── modules/
+│   ├── customers/
+│   │   ├── domain/           # Entidades e regras de negócio
+│   │   ├── application/      # Casos de uso
+│   │   ├── infrastructure/   # Implementação de repositórios
+│   │   ├── interfaces/       # Controllers e DTOs
+│   │   └── mappers/          # Conversores de dados
+│   └── charges/
+│       ├── domain/           # Entidades polimórficas
+│       ├── application/      # Casos de uso
+│       ├── infrastructure/   # Repositórios com lógica polimórfica
+│       ├── interfaces/       # Controllers com Swagger
+│       └── mappers/          # Mapeamento de dados
+├── config/
+│   ├── errors/               # Tratamento de erros
+│   └── swagger/              # Configuração do Swagger
+└── prisma/
+    ├── schema.prisma         # Schema do banco
+    └── migrations/           # Migrações
+
+## 🛠️ Tecnologias
+
+- **[NestJS](https://nestjs.com/)** - Framework Node.js progressivo
+- **[Fastify](https://www.fastify.io/)** - Web framework de alta performance
+- **[Prisma](https://www.prisma.io/)** - ORM moderno para TypeScript
+- **[PostgreSQL](https://www.postgresql.org/)** - Banco de dados relacional
+- **[Zod](https://zod.dev/)** - Validação de schemas com TypeScript
+- **[Swagger/OpenAPI](https://swagger.io/)** - Documentação de API
+- **[Vitest](https://vitest.dev/)** - Framework de testes unitários
+- **[Biome](https://biomejs.dev/)** - Linter e formatador
+
+## 📦 Pré-requisitos
+
+- **Node.js** >= 18.x
+- **PostgreSQL** >= 14.x
+- **npm** ou **yarn**
+
+## ⚙️ Configuração
+
+### 1. Clone o repositório
 
 ```bash
-$ npm install
+git clone <repository-url>
+cd colmeia-api-challenge
 ```
 
-## Compile and run the project
+### 2. Instale as dependências
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+### 3. Configure as variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/colmeia_db?schema=public"
+
+# Application
+PORT=3000
+NODE_ENV=development
+```
+
+### 4. Configure o banco de dados
 
 ```bash
-# unit tests
-$ npm run test
+# Criar o banco de dados (se necessário)
+docker-compose up -d
 
-# e2e tests
-$ npm run test:e2e
+# Executar as migrações
+npx prisma migrate dev
 
-# test coverage
-$ npm run test:cov
+# (Opcional) Visualizar o banco com Prisma Studio
+npx prisma studio
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 5. Execute a aplicação
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Modo desenvolvimento
+npm run start:dev
+
+# Modo produção
+npm run build
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+A API estará disponível em `http://localhost:3000`
 
-## Resources
+## 📚 Documentação da API
 
-Check out a few resources that may come in handy when working with NestJS:
+Acesse a documentação interativa do Swagger em:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```
+http://localhost:3000/docs
+```
 
-## Support
+### Endpoints Disponíveis
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Clientes
 
-## Stay in touch
+- **POST /customers** - Criar novo cliente
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "11999999999",
+    "document": "12345678901"
+  }
+  ```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+#### Cobranças
 
-## License
+- **POST /charges** - Criar nova cobrança
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+  **PIX:**
+  ```json
+  {
+    "customerId": "uuid",
+    "amount": 100.50,
+    "paymentMethod": "PIX",
+    "paymentData": {
+      "pixKey": "11999999999",
+      "qrCode": "00020126580014br.gov.bcb.pix..."
+    }
+  }
+  ```
+
+  **Cartão de Crédito:**
+  ```json
+  {
+    "customerId": "uuid",
+    "amount": 300.00,
+    "paymentMethod": "CREDIT_CARD",
+    "paymentData": {
+      "installments": 3,
+      "lastDigits": "1234",
+      "cardBrand": "Visa"
+    }
+  }
+  ```
+
+  **Boleto:**
+  ```json
+  {
+    "customerId": "uuid",
+    "amount": 200.00,
+    "paymentMethod": "BOLETO",
+    "paymentData": {
+      "barcode": "23793381286000000100641772301027659340000010000",
+      "dueDate": "2025-11-22T00:00:00.000Z"
+    }
+  }
+  ```
+
+## 🧪 Testes
+
+O projeto possui uma suite completa de testes unitários com **97.22% de cobertura**.
+
+```bash
+# Executar todos os testes
+npm run test
+
+# Executar testes em modo watch
+npm run test:watch
+
+# Gerar relatório de cobertura
+npm run test:cov
+
+# Executar interface visual do Vitest
+npm run test:ui
+```
+
+### Estrutura de Testes
+
+- ✅ **30 testes** unitários
+- ✅ **9 arquivos** de teste
+- ✅ Cobertura de:
+  - Entidades de domínio
+  - Factories
+  - Use Cases
+  - Mappers
+  - Validações
+
+```
+Tests Suites:
+├── Customers
+│   ├── customer.entity.spec.ts (3 testes)
+│   ├── create-customer.usecase.spec.ts (2 testes)
+│   └── customer.mapper.spec.ts (2 testes)
+└── Charges
+    ├── pix-charge.entity.spec.ts (3 testes)
+    ├── credit-card-charge.entity.spec.ts (2 testes)
+    ├── boleto-charge.entity.spec.ts (1 teste)
+    ├── charge.factory.spec.ts (5 testes)
+    ├── create-charge.usecase.spec.ts (4 testes)
+    └── charge.mapper.spec.ts (8 testes)
+```
+
+## 🎯 Padrões de Projeto Utilizados
+
+### 1. **Factory Pattern**
+- `ChargeFactory`: Cria instâncias de cobranças baseado no método de pagamento
+- Encapsula a lógica de criação de objetos polimórficos
+
+### 2. **Repository Pattern**
+- Abstração da camada de persistência
+- Interfaces no domínio, implementações na infraestrutura
+- `CustomersRepository`, `ChargesRepository`
+
+### 3. **Mapper Pattern**
+- Converte dados entre camadas (Prisma ↔ Domain ↔ DTO)
+- `CustomerMapper`, `ChargeMapper`
+- Mantém as camadas desacopladas
+
+### 4. **Use Case Pattern**
+- Encapsula regras de negócio
+- Uma responsabilidade por caso de uso
+- `CreateCustomerUseCase`, `CreateChargeUseCase`
+
+### 5. **Dependency Injection**
+- Inversão de controle via NestJS
+- Facilita testes e manutenção
+
+## 🗄️ Modelo de Dados
+
+### Polimorfismo de Cobranças
+
+O sistema utiliza **Single Table Inheritance** a nível de aplicação com tabelas separadas no banco:
+
+```
+Charge (tabela principal)
+├── PIX → PixCharge (tabela)
+├── CREDIT_CARD → CreditCardCharge (tabela)
+└── BOLETO → BoletoCharge (tabela)
+```
+
+**Vantagens:**
+- ✅ Integridade referencial
+- ✅ Queries eficientes
+- ✅ Facilita adição de novos métodos
+- ✅ Validações específicas por tipo
+
+## 🔍 Validações
+
+### Validação em Camadas
+
+1. **DTO Layer (Zod)**
+   - Validação de tipos
+   - Formato de dados
+   - Discriminated unions para polimorfismo
+
+2. **Use Case Layer**
+   - Regras de negócio
+   - Validação de existência (ex: cliente existe?)
+   - Validação de unicidade (ex: email duplicado)
+
+3. **Domain Layer**
+   - Invariantes de domínio
+   - Lógica de entidade
+
+## 🚢 Deploy
+
+### Docker (Recomendado)
+
+```bash
+# Build da imagem
+docker build -t colmeia-api .
+
+# Run com docker-compose
+docker-compose up -d
+```
+
+### Manual
+
+```bash
+# Build
+npm run build
+
+# Run migrations
+npx prisma migrate deploy
+
+# Start
+npm run start:prod
+```
+
+## 📝 Scripts Disponíveis
+
+```bash
+# Desenvolvimento
+npm run start:dev        # Inicia em modo watch
+npm run start:debug      # Inicia com debug
+
+# Build
+npm run build            # Compila o projeto
+
+# Testes
+npm run test             # Executa testes unitários
+npm run test:watch       # Testes em modo watch
+npm run test:cov         # Cobertura de testes
+npm run test:ui          # Interface visual dos testes
+
+# Prisma
+npx prisma studio        # Interface visual do banco
+npx prisma migrate dev   # Cria nova migration
+npx prisma generate      # Gera Prisma Client
+
+# Code Quality
+npm run lint             # Executa biome check
+npm run format           # Formata código
+```
+
+## 🤝 Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT.
+
+## 👨‍💻 Autor
+
+Desenvolvido como parte do desafio técnico Colmeia.
